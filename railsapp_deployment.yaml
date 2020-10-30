@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+#apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: railsapp-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: railsapp
+  template:
+    metadata:
+      labels:
+        app: railsapp
+
+    spec:
+      containers:
+      - name: railsapp
+        image: your_docker_image:tag
+        ports:
+        - containerPort: 3000
+        env:
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: railsapp-secrets
+                key: database-url
+          - name: SECRET_KEY_BASE
+            valueFrom:
+              secretKeyRef:
+                name: railsapp-secrets
+                key: secret-key-base
